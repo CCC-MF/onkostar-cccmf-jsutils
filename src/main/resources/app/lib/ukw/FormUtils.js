@@ -47,6 +47,26 @@ class FormUtils {
     }
 
     /**
+     * Returns field with given field name found in section with given name.
+     * @param fieldName
+     * @param sectionName
+     * @returns {undefined|*}
+     */
+    getFieldInSection(fieldName, sectionName) {
+        if (this.genericEditForm) {
+            const query = '[originalName=' + fieldName + ']';
+            const fields = this.context.genericEditForm
+                .query(query)
+                .filter(e => e.ownerCt.xtype === 'panel' && e.ownerCt.ownerCt.originalName === sectionName);
+            if (fields.length > 0) {
+                return this.context.genericEditForm.down('#' + fields[0].id);
+            }
+            console.error('Field with name "' + fieldName + '" not found in section with name "' + sectionName + '"!');
+        }
+        return undefined;
+    }
+
+    /**
      * Returns value of field with given name from main form if it exists.
      * @param fieldName
      * @returns {undefined|*}
@@ -70,6 +90,35 @@ class FormUtils {
         let mainformField = this.getMainformField(fieldName);
         if (mainformField) {
             return mainformField.setValue(newValue);
+        }
+    }
+
+    /**
+     * Returns value of field with given name in section with given name if it exists.
+     * @param fieldName
+     * @param sectionName
+     * @returns {undefined|*}
+     */
+    getFieldValueInSection(fieldName, sectionName) {
+        let sectionField = this.getFieldInSection(fieldName, sectionName);
+        if (sectionField) {
+            return sectionField.getValue();
+        }
+        return undefined;
+    }
+
+    /**
+     * Updates field with given name in section with given name new value.
+     * The field must reside in main form.
+     * @param fieldName
+     * @param sectionName
+     * @param newValue
+     * @returns {undefined|*}
+     */
+    setFieldValueInSection(fieldName, sectionName, newValue) {
+        let sectionField = this.getFieldInSection(fieldName, sectionName);
+        if (sectionField) {
+            return sectionField.setValue(newValue);
         }
     }
 
