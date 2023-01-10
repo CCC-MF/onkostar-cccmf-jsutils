@@ -34,17 +34,25 @@ let value = formUtils.getMainformFieldValue('demo');
 #### `getMainformField(fieldName)`
 
 Übergibt das komplette Feld mit Namen `fieldName` aus dem Hauptformular und ignoriert alle,
-auch vorhergehende Unterformularfelder mit gleichem Namen.
+auch vorhergehende, Unterformularfelder mit gleichem Namen.
 
 #### `getFieldAtIndex(fieldName, index)`
 
 Übergibt das komplette Feld mit Namen `fieldName` auf Index `index` (nullbasiert), bezogen sowohl auf das Hauptformular als 
 auch Unterformularfelder mit gleichem Namen.
 
+#### `getFieldInSection(fieldName, sectionName)`
+
+Übergibt das Feld mit Namen `fieldName` aus dem Bereich mit Namen `sectionName`.
+
+Da es in Onkostar nicht möglich sein sollte, mehrere Formularfelder mit gleichem Namen in verschiedenen Bereichen eines
+Hauptformulars zu platzieren, ist diese Funktion nur dann hilfreich, wenn sichergestellt sein soll, dass sich das Formularfeld
+in einem Bereich befindet.
+
 #### `getMainformFieldValue(fieldName)`
 
 Übergibt den Inhalt des Felds mit Namen `fieldName` aus dem Hauptformular und ignoriert alle,
-auch vorhergehende Unterformularfelder mit gleichem Namen.
+auch vorhergehende, Unterformularfelder mit gleichem Namen.
 
 Dadurch unterscheidet es sich von `getFieldValue()` von Onkostar, welches den ersten Treffer, 
 unter Umständen auch aus vorhergehenden Unterformularen verwendet.
@@ -52,10 +60,18 @@ unter Umständen auch aus vorhergehenden Unterformularen verwendet.
 #### `setMainformFieldValue(fieldName, newValue)`
 
 Aktualisiert den Inhalt des Felds mit Namen `fieldName` aus dem Hauptformular und ignoriert alle,
-auch vorhergehende Unterformularfelder mit gleichem Namen.
+auch vorhergehende, Unterformularfelder mit gleichem Namen.
 
 Dadurch unterscheidet es sich von `setFieldValue()` von Onkostar, welches den ersten Treffer,
 unter Umständen auch aus vorhergehenden Unterformularen verwendet.
+
+#### `getFieldValueInSection(fieldName, sectionName)`
+
+Übergibt den Inhalt des Felds mit Namen `fieldName` aus dem Bereich mit Namen `sectionName`.
+
+#### `setFieldValueInSection(fieldName, sectionName, newValue)`
+
+Aktualisiert den Inhalt des Felds mit Namen `fieldName` aus dem Bereich mit Namen `sectionName`.
 
 #### `getFieldValueAtIndex(fieldName, index)`
 

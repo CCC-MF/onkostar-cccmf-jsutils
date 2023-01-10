@@ -18,7 +18,7 @@ class FormUtils {
             const query = '[originalName=' + fieldName + ']';
             const fields = this.context.genericEditForm
                 .query(query)
-                .filter(e => e.ownerCt.xtype === 'form');
+                .filter(e => e.ownerCt.xtype === 'form' || e.ownerCt.xtype === 'panel' && e.ownerCt.title.length !== 0);
 
             if (fields.length > 0) {
                 return this.context.genericEditForm.down('#' + fields[0].id);
