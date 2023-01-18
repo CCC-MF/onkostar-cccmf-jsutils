@@ -11,23 +11,23 @@ Die Klasse `FormUtils` stellt Hilfsfunktionen zur Verwendung in Onkostar bereit 
 
 ### Verwendung
 
-Fügen Sie in ein Formular folgenden JavaScript-Code in die Bereiche **Beim Neuanlegen** beziehungsweise **Beim bearbeiten** ein
+Sie können das Script in den Formularscripts von Formularfeldern wie folgt initialisieren und verwenden.
 
 ```javascript
-Ext.require('app.lib.ukw.FormUtils');
+// Laden des Scripts, wenn erforderlich
+Ext.syncRequire('app.lib.ukw.FormUtils', () => {
+    // `this` ist in diesem Zusammenhang das Formular.
+    let formUtils = new FormUtils(this);
+
+    // Wert des Formularfelds `demo` explizit aus dem Hauptformular. Unterformulare werden ignoriert.
+    // Dadurch verält es sich anders als `getFieldValue()` von Onkostar, welches den ersten Treffer,
+    // unter Umständen auch aus vorhergehenden Unterformularen verwendet.
+    let value = formUtils.getMainformFieldValue('demo');
+});
 ```
 
-Sie können nun in Scripts zu Formularfeldern `FormUtils` initialisieren und verwenden.
-
-```javascript
-// `this` ist in diesem Zusammenhang das Formular.
-let formUtils = new FormUtils(this);
-
-// Wert des Formularfelds `demo` explizit aus dem Hauptformular. Unterformulare werden ignoriert.
-// Dadurch verält es sich anders als `getFieldValue()` von Onkostar, welches den ersten Treffer,
-// unter Umständen auch aus vorhergehenden Unterformularen verwendet.
-let value = formUtils.getMainformFieldValue('demo');
-```
+Dabei wird zunächst die `FormUtils`-JavaScript-Datei geladen, wenn sie nicht bereits in Onkostar geladen wurde.
+Anschließend wird die entsprechende Klasse initialisiert und ihr Objekt kann nun mit den verfügbaren Methoden aufgerufen werden.
 
 ### Verfügbare Methoden
 
