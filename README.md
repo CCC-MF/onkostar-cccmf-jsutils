@@ -1,33 +1,88 @@
-# Onkostar Scriptsammlung "onkostar-ukw-jsutils"
+# Onkostar Scriptsammlung "onkostar-cccmf-jsutils"
 
 Eine Sammlung von JavaScript-Funktionen und Klassen zur Verwendung innerhalb von Onkostar-Formular-Scripten.
 
 Diese Sammlung kann wie ein Onkostar-Plugin installiert werden, enthält jedoch keine Pluginfunktionalität.
 Es stellt vielmehr eine Sammlung von JavaScript-Dateien bereit, die innerhalb von Onkostar verwendet werden können.
 
-## FormUtils
+## Generelle Verwendung
 
-Die Klasse `FormUtils` stellt Hilfsfunktionen zur Verwendung in Onkostar bereit und erweitert damit bestehende Funktionalität für Formularfelder.
+Diese Sammlung von JavaScript-Funktionen weicht in einigen Punkten von der typischen Semantik für JavaScript ab,
+da Onkostar intern den ExtJS ClassManager verwendet.
 
-### Verwendung
+### Laden einer Klasse
 
-Sie können das Script in den Formularscripts von Formularfeldern wie folgt initialisieren und verwenden.
+Um eine in dieser Sammlung enthaltene Klasse zu laden wird die ExtJS-Funktion `syncRequire()` verwendet.
+Hierzu wird der Klassenname mit dem Prefix `app.lib` übergeben.
+
+In diesem Beispiel soll die Klasse `cccmf.FormUtils` geladen werden, also wird `app.lib.cccmf.FormUtils` übergeben.
+
+Als zweiter Parameter wird die Funktion übergeben, die ausgeführt werden soll, wenn das Script geladen wurde.
 
 ```javascript
-// Laden des Scripts, wenn erforderlich
-Ext.syncRequire('app.lib.ukw.FormUtils', () => {
-    // `this` ist in diesem Zusammenhang das Formular.
-    let formUtils = new FormUtils(this);
-
-    // Wert des Formularfelds `demo` explizit aus dem Hauptformular. Unterformulare werden ignoriert.
-    // Dadurch verält es sich anders als `getFieldValue()` von Onkostar, welches den ersten Treffer,
-    // unter Umständen auch aus vorhergehenden Unterformularen verwendet.
-    let value = formUtils.getMainformFieldValue('demo');
+Ext.syncRequire('app.lib.cccmf.FormUtils', () => {
+    // Diese Funktion wird ausgeführt, solbald das entsprechende Script geladen wurde
 });
 ```
 
-Dabei wird zunächst die `FormUtils`-JavaScript-Datei geladen, wenn sie nicht bereits in Onkostar geladen wurde.
-Anschließend wird die entsprechende Klasse initialisiert und ihr Objekt kann nun mit den verfügbaren Methoden aufgerufen werden.
+Innerhalb dieser Funktion haben Sie Zugriff auf die geladene Klasse. Hierzu wird nicht das JavaScript-Keyword `new`
+verwendet,
+sondern es muss der in Onkostar enthaltene `Ext.ClassManager` verwendet werden.
+Dessen Funktion `get()` übergibt eine Repräsentation der geladenen Klasse - technisch genauer: eine Funktion,
+welche ein JavaScript-Objekt übergibt.
+
+Die Nutzung des Schlüsselworts `new` ist in Onkostar an dieser Stelle nicht möglich.
+Um die Entwicklung einfacher zu gestalten, soll hier die Funktion `new()` verwendet werden,
+die ähnlich dem Schlüsselwort `new` verwendet werden kann, um den Konstruktor aufzurufen.
+
+Zuvor kann bereits geprüft werden, ob das Laden der Klasse erfolgreich war.
+
+```javascript
+Ext.syncRequire('app.lib.cccmf.FormUtils', () => {
+    // Die ExtJS-Klasse 'cccmf.FormUtils' wird in Variable 'FormUtils' geladen.
+    // Großschreibung um kenntlich zu machen, dass es eine Klasse ist.
+    let FormUtils = Ext.ClassManager.get('cccmf.FormUtils');
+
+    // Wenn `FormUtils === null`, ist die Klasse `cccmf.FormUtils` nicht möglich.
+    if (FormUtils === null) {
+        // Klasse konnte nicht geladen werden. Fehlermeldung und Ende.
+        console.error("Klasse 'cccmf.Formutils' nicht verfügbar!")
+        return;
+    }
+
+    // Eine Instanz der Klasse wird erstellt
+    // Dies entspricht der Nutzung von `new FormUtils(this)` in neueren JavaScript-Codebasen.
+    // `this` ist in diesem Zusammenhang das Formular, auf dem gearbeitet werden soll.
+    let formUtils = FormUtils.new(this);
+
+    // ... Verwendung und weiterer Code ...
+});
+```
+
+## Die Klasse `cccmf.FormUtils`
+
+Die Klasse `cccmf.FormUtils` stellt Hilfsfunktionen zur Verwendung in Onkostar bereit und erweitert damit bestehende
+Funktionalität für Formularfelder.
+
+### Verwendung der Hilfsfunktionen für Formulare
+
+Sie können das Script in den Formularscripts von Formularfeldern wie folgt initialisieren und verwenden -
+hier im Beispiel ohne Prüfung, ob die Klasse geladen wurde.
+
+```javascript
+// Laden des Scripts, wenn erforderlich
+Ext.syncRequire('app.lib.cccmf.FormUtils', () => {
+    // `this` ist in diesem Zusammenhang das Formular.
+    let formUtils = Ext.ClassManager.get('cccmf.FormUtils').new(this);
+
+    // Wert des Formularfelds `Start` explizit aus dem Hauptformular. Unterformulare werden ignoriert.
+    // Dadurch verhält es sich anders als `getFieldValue()` von Onkostar, welches den ersten Treffer,
+    // unter Umständen auch aus vorhergehenden Unterformularen verwendet.
+    let value = formUtils.getMainformFieldValue('Start');
+
+    // ... weiterer Code ...
+});
+```
 
 ### Verfügbare Methoden
 
@@ -38,7 +93,8 @@ auch vorhergehende, Unterformularfelder mit gleichem Namen.
 
 #### `getFieldAtIndex(fieldName, index)`
 
-Übergibt das komplette Feld mit Namen `fieldName` auf Index `index` (nullbasiert), bezogen sowohl auf das Hauptformular als 
+Übergibt das komplette Feld mit Namen `fieldName` auf Index `index` (nullbasiert), bezogen sowohl auf das Hauptformular
+als
 auch Unterformularfelder mit gleichem Namen.
 
 #### `getFieldInSection(fieldName, sectionName)`
@@ -46,7 +102,8 @@ auch Unterformularfelder mit gleichem Namen.
 Übergibt das Feld mit Namen `fieldName` aus dem Bereich mit Namen `sectionName`.
 
 Da es in Onkostar nicht möglich sein sollte, mehrere Formularfelder mit gleichem Namen in verschiedenen Bereichen eines
-Hauptformulars zu platzieren, ist diese Funktion nur dann hilfreich, wenn sichergestellt sein soll, dass sich das Formularfeld
+Hauptformulars zu platzieren, ist diese Funktion nur dann hilfreich, wenn sichergestellt sein soll, dass sich das
+Formularfeld
 in einem Bereich befindet.
 
 #### `getMainformFieldValue(fieldName)`
@@ -54,7 +111,7 @@ in einem Bereich befindet.
 Übergibt den Inhalt des Felds mit Namen `fieldName` aus dem Hauptformular und ignoriert alle,
 auch vorhergehende, Unterformularfelder mit gleichem Namen.
 
-Dadurch unterscheidet es sich von `getFieldValue()` von Onkostar, welches den ersten Treffer, 
+Dadurch unterscheidet es sich von `getFieldValue()` von Onkostar, welches den ersten Treffer,
 unter Umständen auch aus vorhergehenden Unterformularen verwendet.
 
 #### `setMainformFieldValue(fieldName, newValue)`
@@ -75,12 +132,14 @@ Aktualisiert den Inhalt des Felds mit Namen `fieldName` aus dem Bereich mit Name
 
 #### `getFieldValueAtIndex(fieldName, index)`
 
-Übergibt den Inhalt des Felds mit Namen `fieldName` auf Index `index` (nullbasiert), bezogen sowohl auf das Hauptformular als
+Übergibt den Inhalt des Felds mit Namen `fieldName` auf Index `index` (nullbasiert), bezogen sowohl auf das
+Hauptformular als
 auch Unterformularfelder mit gleichem Namen.
 
 #### `setFieldValueAtIndex(fieldName, index, newValue)`
 
-Aktualisiert den Inhalt des Felds mit Namen `fieldName` auf Index `index` (nullbasiert), bezogen sowohl auf das Hauptformular als
+Aktualisiert den Inhalt des Felds mit Namen `fieldName` auf Index `index` (nullbasiert), bezogen sowohl auf das
+Hauptformular als
 auch Unterformularfelder mit gleichem Namen.
 
 #### `getFieldValues(fieldName)`

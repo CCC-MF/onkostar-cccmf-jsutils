@@ -7,5 +7,5 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <mvc:resources mapping="/app/lib/ukw/**" location="classpath:/app/lib/ukw/" />
+    <mvc:resources mapping="/app/lib/cccmf/**" location="classpath:/app/lib/cccmf/" />
 </beans>

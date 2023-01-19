@@ -5,11 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.ukw</groupId>
-    <artifactId>onkostar-ukw-jsutils</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <artifactId>onkostar-cccmf-jsutils</artifactId>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
-
-    <name>onkostar-plugin-jsutils</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

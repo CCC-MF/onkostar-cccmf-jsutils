@@ -4,7 +4,7 @@ class FormUtils {
         this.context = context;
 
         if (!this.context.genericEditForm) {
-            console.error('Context does not contain "genericEditForm". Please use "new FormUtils(this)" or methods will return undefined values!');
+            console.warn('Context does not contain "genericEditForm".\nThis should only occur in form development mode.');
         }
     }
 
@@ -199,3 +199,17 @@ class FormUtils {
         return undefined;
     }
 }
+
+/**
+ * Wrapper for use with ExtJS
+ *
+ * Usage example:
+ *
+ * let formUtils = Ext.ClassManager.get('cccmf.FormUtils').new(this);
+ * console.log(formUtils.getMainformFieldValue('Start'));
+ */
+Ext.define('cccmf.FormUtils', {
+    statics: {
+        new: (context) => new FormUtils(context)
+    }
+});
