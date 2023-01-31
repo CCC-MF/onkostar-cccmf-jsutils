@@ -221,7 +221,7 @@ class FormUtils {
      *
      * @returns {undefined|*|{isSubform: boolean, blockIndex: *, formName: *, subformFieldName: *}|{isSubform: boolean}}
      */
-    getButtonFieldFormInformation() {
+    getActiveButtonForm() {
         const findElemId = (elem) => {
             if (elem.tagName === 'BODY') {
                 return undefined;

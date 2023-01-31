@@ -154,16 +154,16 @@ auch Unterformularfelder mit gleichem Namen.
 
 Übergibt Formularfeldnamen für Unterformulare mit Namen `subformName`.
 
-#### `getButtonFieldFormInformation()`
+#### `getActiveButtonForm()`
 
 Übergibt, sofern verfügbar, Informationen zum (Unter-)Formular mit aktuell aktiven Button.
 
 In Onkostar kann derzeit nicht festgestellt werden, in welchem Unterformular(exemplar) eine Änderung erfolgte,
 da der BlockIndex nicht verfügbar ist. 
 
-Ein Button hat nach dem Betätigen/Klick eines Buttons den Fokus und ist aktiv. Diese Funktion kann dazu genutzt werden,
+Ein Button hat nach dem Betätigen/Klick den Fokus und ist aktives Element. Diese Funktion kann dazu genutzt werden,
 um festzustellen, in welchem Unterformular (BlockIndex) ein Button betätigt wurde um diese Information in einem 
-Formular-Script "Nach Aktualisierung" verfügbar zu machen.
+Formular-Script z.B. "Nach Aktualisierung" verfügbar zu machen.
 
 Beispiele für Rückgabewerte:
 * Wenn kein aktiver Button in einem Formular festgestellt wurde: `undefined`
