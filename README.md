@@ -153,3 +153,27 @@ auch Unterformularfelder mit gleichem Namen.
 #### `getSubformFieldNames(subformName)`
 
 Übergibt Formularfeldnamen für Unterformulare mit Namen `subformName`.
+
+#### `getButtonFieldFormInformation()`
+
+Übergibt, sofern verfügbar, Informationen zum (Unter-)Formular mit aktuell aktiven Button.
+
+In Onkostar kann derzeit nicht festgestellt werden, in welchem Unterformular(exemplar) eine Änderung erfolgte,
+da der BlockIndex nicht verfügbar ist. 
+
+Ein Button hat nach dem Betätigen/Klick eines Buttons den Fokus und ist aktiv. Diese Funktion kann dazu genutzt werden,
+um festzustellen, in welchem Unterformular (BlockIndex) ein Button betätigt wurde um diese Information in einem 
+Formular-Script "Nach Aktualisierung" verfügbar zu machen.
+
+Beispiele für Rückgabewerte:
+* Wenn kein aktiver Button in einem Formular festgestellt wurde: `undefined`
+* Aktiver Button in einem Hauptformular (JSON-Notation): `{ "isSubform": false }`
+* Aktiver Button in einem Unterformular (JSON-Notation):
+  ```json lines
+  {
+    "isSubform": true,
+    "blockIndex": 1,
+    "formName": "OS.Example",
+    "subformFieldName": "examplesubform"
+  }
+  ```

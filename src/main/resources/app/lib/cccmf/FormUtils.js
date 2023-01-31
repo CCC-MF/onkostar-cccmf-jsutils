@@ -198,6 +198,82 @@ class FormUtils {
         }
         return undefined;
     }
+
+    /**
+     * Returns information about button field containing current active HTML button element.
+     *
+     * If current active button is within main form, `isSubform` will be `false`;
+     * if in subform, `isSubform` will be `true` and result will contain additional information
+     * about subform and block index.
+     *
+     * If no active element in form or subform `undefined`, this method will return `undefined`.S
+     *
+     * Example response as JSON:
+     *
+     * ```
+     * {
+     *     "isSubform": true,
+     *     "blockIndex": 1,
+     *     "formName": "OS.Example",
+     *     "subformFieldName": "examplesubform"
+     * }
+     * ```
+     *
+     * @returns {undefined|*|{isSubform: boolean, blockIndex: *, formName: *, subformFieldName: *}|{isSubform: boolean}}
+     */
+    getButtonFieldFormInformation() {
+        const findElemId = (elem) => {
+            if (elem.tagName === 'BODY') {
+                return undefined;
+            }
+
+            if (elem.tagName === 'TABLE') {
+                return elem.id;
+            }
+
+            return findElemId(elem.parentElement);
+        }
+
+        const formInfo = (formItem, blockIndex = undefined) => {
+            if (formItem.xtype === 'buttonField') {
+                return formInfo(formItem.ownerCt, formItem.blockIndex);
+            }
+
+            if (formItem.xtype === 'panel') {
+                return formInfo(formItem.ownerCt, blockIndex);
+            }
+
+            if (formItem.xtype === 'subformField') {
+                return {
+                    isSubform: true,
+                    formName: formItem.formName,
+                    subformFieldName: formItem.subformName,
+                    blockIndex: blockIndex
+                };
+            }
+
+            if (formItem.xtype === 'form') {
+                return {
+                    isSubform: false,
+                };
+            }
+
+            console.warn('No information found!');
+            return undefined;
+        }
+
+        if (this.context.genericEditForm && document.activeElement.tagName === 'BUTTON') {
+            let elemId = findElemId(document.activeElement);
+            if (elemId) {
+                let formItem = this.context.genericEditForm.down('#'+elemId);
+                if (formItem) {
+                    return formInfo(formItem);
+                }
+            }
+        }
+
+        return undefined;
+    }
 }
 
 /**
